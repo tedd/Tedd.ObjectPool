@@ -15,6 +15,7 @@
     <Description>Object Pool Library for reusing objects in .Net. Reuse of objects decreases load on Garbage Collector and increases performance of application. Library is based on Roslyn ObjectPool.</Description>
     <Copyright>Tedd Hansen</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
