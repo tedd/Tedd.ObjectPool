@@ -11,6 +11,16 @@
     <Authors>Tedd Hansen</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReleaseNotes />
+    <Description>Object Pool Library for reusing objects in .Net. Reuse of objects decreases load on Garbage Collector and increases performance of application. Library is based on Roslyn ObjectPool.</Description>
+    <Copyright>Tedd Hansen</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
