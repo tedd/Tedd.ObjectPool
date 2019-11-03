@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageProjectUrl>https://github.com/tedd/Tedd.ObjectPool</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/tedd/Tedd.ObjectPool</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageTags>ObjectPool Performance</PackageTags>
+    <Product>Tedd.ObjectPool</Product>
+    <Company>Tedd Hansen</Company>
+    <Authors>Tedd Hansen</Authors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageReleaseNotes />
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29411.108
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tedd.ObjectPool", "Tedd.ObjectPool\Tedd.ObjectPool.csproj", "{C242A2A5-9D49-46A5-BEB6-616677CD3EAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tedd.ObjectPool.Tests", "Tedd.ObjectPool.Tests\Tedd.ObjectPool.Tests.csproj", "{4418CD9B-5CBA-4CB4-A252-B39AAF9562F6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C242A2A5-9D49-46A5-BEB6-616677CD3EAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C242A2A5-9D49-46A5-BEB6-616677CD3EAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C242A2A5-9D49-46A5-BEB6-616677CD3EAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C242A2A5-9D49-46A5-BEB6-616677CD3EAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4418CD9B-5CBA-4CB4-A252-B39AAF9562F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4418CD9B-5CBA-4CB4-A252-B39AAF9562F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4418CD9B-5CBA-4CB4-A252-B39AAF9562F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4418CD9B-5CBA-4CB4-A252-B39AAF9562F6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0EA91FAA-7508-4F08-B86B-9FABAB43B035}
+	EndGlobalSection
+EndGlobal
