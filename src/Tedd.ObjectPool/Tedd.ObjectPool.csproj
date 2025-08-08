@@ -1,27 +1,43 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- net40;net403;net45;net451;net452;net46;net461;net462;net47;net471;net472; -->
-    <TargetFrameworks>net48;netstandard1.3;netstandard1.4;netstandard1.5;netstandard1.6;netstandard2.0;netstandard2.1;netcoreapp2.0;netcoreapp2.1;netcoreapp2.2;netcoreapp3.0</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <PackageProjectUrl>https://github.com/tedd/Tedd.ObjectPool</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/tedd/Tedd.ObjectPool</RepositoryUrl>
+    <RepositoryUrl>https://github.com/tedd/Tedd.ObjectPool.git</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
-    <PackageTags>ObjectPool Performance</PackageTags>
+    <PackageTags>ObjectPool;Performance</PackageTags>
     <Product>Tedd.ObjectPool</Product>
-    <Company>Tedd Hansen</Company>
-    <Authors>Tedd Hansen</Authors>
+    <PackageReleaseNotes>Substantially faster than previous version.</PackageReleaseNotes>
+    <Description>Object Pool Library, faster than Microsoft's default implementation. See benchmark results.</Description>
+    <Version>2.0.0</Version>
+    
+
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageReleaseNotes />
-    <Description>Object Pool Library for reusing objects in .Net. Reuse of objects decreases load on Garbage Collector and increases performance of application. Library is based on Roslyn ObjectPool.</Description>
+    <RepositoryType>git</RepositoryType>
+    <Authors>tedd</Authors>
+    <Company>Tedd Hansen</Company>
     <Copyright>Tedd Hansen</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Version>1.0.1</Version>
+    <PackageReadmeFile>README-NUGET.md</PackageReadmeFile>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
+    <AnalysisLevel>latest-all</AnalysisLevel>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="..\..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="README-NUGET.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
 
