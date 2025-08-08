@@ -1,5 +1,7 @@
 ## Tedd.ObjectPool
 
+[![NuGet](https://img.shields.io/nuget/v/Tedd.ObjectPool.svg)](https://www.nuget.org/packages/Tedd.ObjectPool/)
+
 High-performance, thread-safe object pool for reference types in .NET. Optimized for ultra-low overhead under contention with per-thread fast paths, avoiding locks on hot paths.
 
 Under concurrent workloads, Tedd.ObjectPool delivers between 11× and 111× higher throughput than Microsoft.Extensions.ObjectPool, with the largest gains at high thread counts.
