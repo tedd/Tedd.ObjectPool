@@ -1,7 +1,7 @@
- using BenchmarkDotNet.Attributes;
- using BenchmarkDotNet.Configs;
- using BenchmarkDotNet.Exporters;
- using BenchmarkDotNet.Exporters.Csv;
+using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Exporters;
+using BenchmarkDotNet.Exporters.Csv;
 
 using Microsoft.Extensions.ObjectPool;
 
@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 using LegacyPool = Tedd.ObjectPool.Benchmarks.Legacy.ObjectPool1<byte[]>;
 
-namespace Tedd.ObjectPool.Benchmarks;
+namespace Tedd.ObjectPoolBenchmarks;
 
- [MemoryDiagnoser]
- [ThreadingDiagnoser]
- [Config(typeof(BenchConfig))]
- public class MultiThreadBenchmarks
+[MemoryDiagnoser]
+[ThreadingDiagnoser]
+[Config(typeof(BenchConfig))]
+public class MultiThreadBenchmarks
 {
     private Tedd.ObjectPool<byte[]> _teddPool = null!;
     private DefaultObjectPool<byte[]> _msPool = null!;
@@ -28,7 +28,7 @@ namespace Tedd.ObjectPool.Benchmarks;
     //[Params(32)]
     public int Threads { get; set; } = Math.Max(2, Environment.ProcessorCount);
 
-    [Params(1_000)]
+    [Params(10_000)]
     public int OperationsPerThread { get; set; }
 
     [Params(256)]
@@ -151,17 +151,17 @@ namespace Tedd.ObjectPool.Benchmarks;
         public override bool Return(byte[] obj) => obj.Length == _size; // keep; do not clear
     }
 
-     private sealed class BenchConfig : ManualConfig
-     {
-         public BenchConfig()
-         {
-             AddExporter(MarkdownExporter.GitHub);
-             AddExporter(HtmlExporter.Default);
-             AddExporter(CsvExporter.Default);
-             // Graphs (requires R on PATH). If R is missing, BDN will report a warning and skip.
-             AddExporter(RPlotExporter.Default);
-         }
-     }
+    private sealed class BenchConfig : ManualConfig
+    {
+        public BenchConfig()
+        {
+            AddExporter(MarkdownExporter.GitHub);
+            AddExporter(HtmlExporter.Default);
+            AddExporter(CsvExporter.Default);
+            // Graphs (requires R on PATH). If R is missing, BDN will report a warning and skip.
+            AddExporter(RPlotExporter.Default);
+        }
+    }
 }
 
 
