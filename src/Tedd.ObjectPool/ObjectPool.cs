@@ -128,9 +128,15 @@ public sealed class ObjectPool<T> : IDisposable where T : class
     /// </summary>
     public ObjectPool(Factory factory, Action<T>? cleanup, int size, bool disposeWhenFull)
     {
+#if NET8_0_OR_GREATER
+        ArgumentOutOfRangeException.ThrowIfLessThan(size, 1);
+        ArgumentNullException.ThrowIfNull(factory);
+#else
         if (size < 1) throw new ArgumentOutOfRangeException(nameof(size));
+        if (factory == null) throw new ArgumentNullException(nameof(factory));
+#endif
 
-        _factory = factory ?? throw new ArgumentNullException(nameof(factory));
+        _factory = factory;
         _cleanup = cleanup;
         _disposeWhenFull = disposeWhenFull;
 
@@ -235,7 +241,11 @@ public sealed class ObjectPool<T> : IDisposable where T : class
     /// </summary>
     public void AllocateExecuteDeallocate(Action<T> action, Action<T>? cleanupAction = null)
     {
+#if NET8_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(action);
+#else
         if (action == null) throw new ArgumentNullException(nameof(action));
+#endif
         var obj = Allocate();
         try
         {
