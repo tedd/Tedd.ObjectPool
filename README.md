@@ -34,7 +34,7 @@ using Tedd;
 using System.Text;
 
 var pool = new ObjectPool<StringBuilder>(
-    factory: () => new StringBuilder(capacity: 256),
+    factory: () => new(capacity: 256),
     cleanup: sb => sb.Clear(),           // reset before publishing back
     size: 64                              // total pool slots
 );
@@ -139,7 +139,7 @@ pool.Prefill(count: 32);
 
 ```csharp
 var socketPool = new ObjectPool<System.Net.Sockets.Socket>(
-    factory: () => new System.Net.Sockets.Socket(System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp),
+    factory: () => new(System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp),
     cleanup: s => { /* reset if applicable */ },
     size: 32,
     disposeWhenFull: true // overflowed sockets are disposed instead of dropped
@@ -162,6 +162,17 @@ var socketPool = new ObjectPool<System.Net.Sockets.Socket>(
 - `T` must be a reference type (`class`).
 - The pool does not own lifetime of items except when `disposeWhenFull: true` is enabled for overflow.
 - `Dispose()` only tears down internal thread-local storage; it does not dispose pooled items.
+
+## Architectural Execution Flow
+
+Tedd.ObjectPool utilizes a multi-tiered allocation strategy designed to minimize lock contention and interlocked operations on hot paths:
+
+1. **Thread-Local Storage (TLS) Cache:** The highest-priority path utilizes a per-thread, single-item cache (`ThreadLocal<T?>`). Most `Allocate` and `Free` pairs execute sequentially without touching shared memory or requiring CAS (Compare-And-Swap) instructions.
+2. **Fast Slot (`_firstItem`):** If the TLS cache is empty during allocation (or full during deallocation), the pool attempts an optimistic read and a single CAS operation against a dedicated, highly-contended "fast slot".
+3. **Shared Array (`_items`):** When the fast slot is occupied, the pool probes a shared array. To prevent cache-line ping-pong and CAS collisions under extreme concurrency, the probe initiates at a rotating index (`_allocIdx` / `_freeIdx`).
+4. **Factory Fallback / Overflow:** If the array is exhausted during allocation, a new instance is instantiated via the provided delegate. During deallocation, if the pool is at maximum capacity, the object is either dropped for garbage collection or explicitly disposed (if `disposeWhenFull` is configured and the type implements `IDisposable`).
+
+*Note: The aforementioned architecture represents the established framework capabilities. There are currently no speculative future enhancements (hypotheses) planned for the core execution flow, ensuring strict deterministic behavior.*
 
 ## Implementation and performance details
 
