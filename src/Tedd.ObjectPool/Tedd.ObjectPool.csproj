@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net4.6.2;netstandard2.0;netstandard2.1;netcoreapp3.1;net5.0;net6.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>High-performance, thread-safe object pool for reference types in .NET. Optimized for ultra-low overhead under contention with per-thread fast paths, avoiding locks on hot paths.</Description>
     <PackageTags>ObjectPool;Performance;High-Performance;Thread-Safe;Pool</PackageTags>

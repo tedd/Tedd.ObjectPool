@@ -31,14 +31,14 @@ public class ObjectPoolTests
         var maxCount = 100;
         var oc = 0;
         var objectPool = new ObjectPool<DummyObject>(() => new DummyObject() { Id = ++oc }, maxCount + 1);
-        var os = new DummyObject[maxCount];
+        var os = new DummyObject?[maxCount];
         for (var i = 0; i < maxCount; i++)
         {
             os[i] = objectPool.Allocate();
         }
         for (var i = 0; i < maxCount; i++)
         {
-            objectPool.Free(os[i]);
+            objectPool.Free(os[i]!);
             os[i] = null;
         }
         for (var i = 0; i < maxCount; i++)
@@ -55,14 +55,14 @@ public class ObjectPoolTests
         var maxCount = 100;
         var oc = 0;
         var objectPool = new ObjectPool<DummyObject>(() => new DummyObject() { Id = ++oc }, o => o.Id += 1000, maxCount + 1);
-        var os = new DummyObject[maxCount];
+        var os = new DummyObject?[maxCount];
         for (var i = 0; i < maxCount; i++)
         {
             os[i] = objectPool.Allocate();
         }
         for (var i = 0; i < maxCount; i++)
         {
-            objectPool.Free(os[i]);
+            objectPool.Free(os[i]!);
             os[i] = null;
         }
         for (var i = 0; i < maxCount; i++)
@@ -80,14 +80,14 @@ public class ObjectPoolTests
         var poolSize = 50;
         var oc = 0;
         var objectPool = new ObjectPool<DummyObject>(() => new DummyObject() { Id = ++oc }, poolSize);
-        var os = new DummyObject[maxCount];
+        var os = new DummyObject?[maxCount];
         for (var i = 0; i < maxCount; i++)
         {
             os[i] = objectPool.Allocate();
         }
         for (var i = 0; i < maxCount; i++)
         {
-            objectPool.Free(os[i]);
+            objectPool.Free(os[i]!);
             os[i] = null;
         }
 
@@ -98,8 +98,8 @@ public class ObjectPoolTests
             os[i] = objectPool.Allocate();
         }
 
-        var reusedObjects = os.Count(o => o.Id < 1000);
-        var newObjects = os.Count(o => o.Id > 1000);
+        var reusedObjects = os.Count(o => o!.Id < 1000);
+        var newObjects = os.Count(o => o!.Id > 1000);
 
         // TLS cache may hold one extra object beyond pool slots
         Assert.True(reusedObjects == poolSize || reusedObjects == poolSize + 1);
