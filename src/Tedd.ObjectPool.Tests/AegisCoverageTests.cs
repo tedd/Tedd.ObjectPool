@@ -30,13 +30,11 @@ public class AegisCoverageTests
     public void Dispose_WhenTlsIsNull_ShouldNotThrow()
     {
         var pool = new ObjectPool<DisposableObject>(() => new DisposableObject());
-        var field = typeof(ObjectPool<DisposableObject>).GetField("_tls", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        if (field != null)
-        {
-            var oldTls = (IDisposable?)field.GetValue(pool);
-            oldTls?.Dispose();
-            field.SetValue(pool, null);
-        }
+        var field = typeof(ObjectPool<DisposableObject>).GetField("_tls",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        Assert.NotNull(field);
+        (field!.GetValue(pool) as IDisposable)?.Dispose();
+        field.SetValue(pool, null);
         var exception = Record.Exception(() => pool.Dispose());
         Assert.Null(exception);
     }
