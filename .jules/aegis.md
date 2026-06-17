@@ -1,0 +1,3 @@
+## 2026-06-08 - ObjectPool Coverage Expansion
+**Observation:** The codebase's `.NET` `Tedd.ObjectPool` coverage was at 76.64% line and 70% branch coverage, specifically missing edge cases in `Dispose()`, `Prefill(int)`, and `AllocateExecuteDeallocate(Action, Action)`. Conditional branches for nullable `_tls` disposal and uninitialized state checks were identified as untested.
+**Strategic Action:** Implemented parameterized and boundary testing using xUnit Theories. Utilized `Reflection` conditionally to reset the readonly TLS field for explicit branch testing on disposal. Established inputs (-1, 0, 1, 5, 100) on pool slots for parameterized prefill condition verification to ensure absolute code coverage guarantees deterministic execution.
