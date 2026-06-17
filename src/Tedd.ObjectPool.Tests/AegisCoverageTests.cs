@@ -79,16 +79,17 @@ public class AegisCoverageTests
         var createCount = 0;
         var pool = new ObjectPool<DisposableObject>(() => new DisposableObject { Id = ++createCount }, 10);
 
-        // Allocate and free to occupy the fast slot
-        var obj = pool.Allocate();
-        pool.Free(obj);
+        // Allocate and free two objects so TLS and fast slot are occupied
+        var obj1 = pool.Allocate();
+        var obj2 = pool.Allocate();
+        pool.Free(obj1); // TLS
+        pool.Free(obj2); // Fast Slot
 
         // Pre-fill should skip the fast slot and start populating array slots
         pool.Prefill(5);
 
-        // 1 object from manual allocation + 5 from prefill
-        Assert.Equal(6, createCount);
-    }
+        // 2 objects from manual allocation + 5 from prefill
+        Assert.Equal(7, createCount);
 
     [Fact]
     public void Prefill_WhenSomeArraySlotsOccupied_ShouldSkipOccupiedSlots()
