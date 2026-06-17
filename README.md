@@ -170,7 +170,7 @@ Tedd.ObjectPool utilizes a multi-tiered allocation strategy designed to minimize
 2. **Fast Slot (`_firstItem`):** If the TLS cache is empty during allocation, the pool attempts an optimistic read and a single CAS operation against a dedicated, highly-contended "fast slot". During deallocation (when TLS is already occupied), the pool publishes to the fast slot using `Volatile.Read`/`Volatile.Write` when it is observed empty.
 4. **Factory Fallback / Overflow:** If the array is exhausted during allocation, a new instance is instantiated via the provided delegate. During deallocation, if the pool is at maximum capacity, the object is either dropped for garbage collection or explicitly disposed (if `disposeWhenFull` is configured and the type implements `IDisposable`).
 
-*Note: The aforementioned architecture represents the established framework capabilities. There are currently no speculative future enhancements (hypotheses) planned for the core execution flow, ensuring strict deterministic behavior.*
+*Note: The architecture described above reflects the current implementation. There are currently no speculative future enhancements (hypotheses) planned for the core execution flow.*
 
 ## Implementation and performance details
 
