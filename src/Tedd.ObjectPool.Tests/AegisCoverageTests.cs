@@ -18,7 +18,7 @@ public class AegisCoverageTests
     }
 
     [Fact]
-    public void Dispose_ShouldNotThrow_WhenPoolDisposed()
+    public void Dispose_ShouldNotThrow_WhenTlsInitialized()
     {
         var pool = new ObjectPool<DisposableObject>(() => new DisposableObject());
         pool.Allocate(); // Initialize TLS
