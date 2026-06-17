@@ -142,9 +142,7 @@ public class AegisCoverageTests
     public void AllocateExecuteDeallocate_NullAction_ShouldThrowArgumentNullException()
     {
         var pool = new ObjectPool<DisposableObject>(() => new DisposableObject());
-        var exception = Record.Exception(() => pool.AllocateExecuteDeallocate(null!));
-        Assert.NotNull(exception);
-        Assert.IsType<ArgumentNullException>(exception);
+        Assert.Throws<ArgumentNullException>(() => pool.AllocateExecuteDeallocate(null!));
     }
 
     [Theory]
