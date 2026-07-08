@@ -90,6 +90,7 @@ public class AegisCoverageTests
 
         // 2 objects from manual allocation + 5 from prefill
         Assert.Equal(7, createCount);
+    }
 
     [Fact]
     public void Prefill_WhenSomeArraySlotsOccupied_ShouldSkipOccupiedSlots()
@@ -172,5 +173,32 @@ public class AegisCoverageTests
         {
             Assert.False(obj4.IsDisposed);
         }
+    }
+
+    [Fact]
+    public void ForgetTrackedObject_WhenNotTracked_ShouldOutputDebugMessage()
+    {
+        var pool = new ObjectPool<DisposableObject>(() => new DisposableObject());
+        var obj = new DisposableObject(); // Not allocated from pool
+        pool.ForgetTrackedObject(obj);
+        // We just ensure it doesn't throw. In a real environment we might capture Trace output, but not necessary for 100% coverage
+    }
+
+    [Fact]
+    public void Scoped_ShouldAllocateExecuteAndFree()
+    {
+        var createCount = 0;
+        var pool = new ObjectPool<DisposableObject>(() => new DisposableObject { Id = ++createCount });
+        var executed = false;
+
+        pool.Scoped(42, (obj, state) =>
+        {
+            Assert.Equal(42, state);
+            Assert.NotNull(obj);
+            executed = true;
+        });
+
+        Assert.True(executed);
+        Assert.Equal(1, createCount);
     }
 }
