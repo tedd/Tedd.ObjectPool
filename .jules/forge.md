@@ -15,3 +15,8 @@
 **Observation:** Tests and benchmarks had compiler warnings for nullability when `Nullable` was set to `enable` in the projects.
 
 **Strategic Action:** Resolved nullability warnings in tests and legacy benchmark code by using explicit nullability (e.g., `DummyObject?[]`) or null-forgiving operators where required to ensure strict clean builds.
+## 2026-06-02 - ObjectPool Dependencies Modernization
+
+**Observation:** Test and benchmark dependencies were slightly outdated.
+
+**Strategic Action:** Updated `Microsoft.NET.Test.Sdk` to 18.8.1 and `Microsoft.Extensions.ObjectPool` to 10.0.10.
