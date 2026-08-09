@@ -1,11 +1,11 @@
-﻿using BenchmarkDotNet.Running;
+using BenchmarkDotNet.Running;
 
-namespace Tedd.ObjectPool.Benchmarks;
+namespace Tedd.ObjectPoolBenchmarks;
 
-internal class Program
+class Program
 {
-    private static void Main(string[] args)
+    static void Main(string[] args)
     {
-        BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);
+        BenchmarkRunner.Run<NewBenchmarks>();
     }
 }
