@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Tedd.ObjectPool\Tedd.ObjectPool.csproj" />
+    <ProjectReference Include="..\Tedd.ObjectPool.Archive\Tedd.ObjectPool.Archive.csproj" />
   </ItemGroup>
 
 </Project>

@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 
 // ReSharper disable once CheckNamespace
-namespace Tedd;
+namespace Tedd.Legacy;
 
 /// <summary>
 /// High-performance, thread-safe object pool for reference types.
@@ -267,16 +267,11 @@ public sealed class ObjectPool<T> : IDisposable where T : class
         int len = items.Length;
         if (len != 0)
         {
-            // O(N) Time Complexity, O(1) Space Complexity
             // Rotating start reduces CAS collisions and cache-line ping-pong.
-            // Using uint avoids negative modulo on overflow, and we pre-calculate the start offset.
-            int start = (int)((uint)Interlocked.Increment(ref _allocIdx) % (uint)len);
+            int start = Interlocked.Increment(ref _allocIdx);
             for (int k = 0; k < len; k++)
             {
-                // Branch is faster than modulo in the hot loop
-                int i = start + k;
-                if (i >= len) i -= len;
-
+                int i = (start + k) % len;
                 var candidate = Volatile.Read(ref items[i].Value);
                 if (candidate != null &&
                     Interlocked.CompareExchange(ref items[i].Value, null, candidate) == candidate)
@@ -297,13 +292,10 @@ public sealed class ObjectPool<T> : IDisposable where T : class
         int len = items.Length;
         if (len != 0)
         {
-            // O(N) Time Complexity, O(1) Space Complexity
-            int start = (int)((uint)Interlocked.Increment(ref _freeIdx) % (uint)len);
+            int start = Interlocked.Increment(ref _freeIdx);
             for (int k = 0; k < len; k++)
             {
-                int i = start + k;
-                if (i >= len) i -= len;
-
+                int i = (start + k) % len;
                 if (Volatile.Read(ref items[i].Value) == null)
                 {
                     Volatile.Write(ref items[i].Value, obj);
@@ -406,4 +398,3 @@ public sealed class ObjectPool<T> : IDisposable where T : class
         }
     }
 }
-
