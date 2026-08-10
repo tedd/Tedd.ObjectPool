@@ -33,7 +33,7 @@ Basic pooling of an object, e.g., `StringBuilder`:
 using Tedd;
 using System.Text;
 
-var pool = new ObjectPool<StringBuilder>(
+ObjectPool<StringBuilder> pool = new(
     factory: () => new(capacity: 256),
     cleanup: sb => sb.Clear(),           // reset before publishing back
     size: 64                              // total pool slots
@@ -86,7 +86,7 @@ finally
 ### 1) Simple allocate/free
 
 ```csharp
-var pool = new ObjectPool<byte[]>(
+ObjectPool<byte[]> pool = new(
     factory: () => new byte[4096],
     cleanup: _ => { /* optional reset */ },
     size: 128
@@ -138,7 +138,7 @@ pool.Prefill(count: 32);
 ### 5) Dispose overflow when full (for IDisposable)
 
 ```csharp
-var socketPool = new ObjectPool<System.Net.Sockets.Socket>(
+ObjectPool<System.Net.Sockets.Socket> socketPool = new(
     factory: () => new(System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp),
     cleanup: s => { /* reset if applicable */ },
     size: 32,
@@ -167,7 +167,9 @@ var socketPool = new ObjectPool<System.Net.Sockets.Socket>(
 
 Tedd.ObjectPool utilizes a multi-tiered allocation strategy designed to minimize lock contention and interlocked operations on hot paths:
 
+1. **Thread-Local Storage (TLS) Cache:** The most performant path. Each thread possesses a dedicated single-item cache. During allocation, the pool first checks this cache, requiring zero interlocked operations or memory barriers. During deallocation, if the thread's TLS slot is empty, the object is deposited here.
 2. **Fast Slot (`_firstItem`):** If the TLS cache is empty during allocation, the pool attempts an optimistic read and a single CAS operation against a dedicated, highly-contended "fast slot". During deallocation (when TLS is already occupied), the pool publishes to the fast slot using `Volatile.Read`/`Volatile.Write` when it is observed empty.
+3. **Rotating Array Slots:** If the fast slot is occupied or unavailable during allocation, the pool probes a backing array utilizing a rotating index to spread contention and mitigate cache-line ping-pong. During deallocation, if the fast slot is occupied, the pool traverses the array from a rotating index and publishes the object to the first empty slot encountered.
 4. **Factory Fallback / Overflow:** If the array is exhausted during allocation, a new instance is instantiated via the provided delegate. During deallocation, if the pool is at maximum capacity, the object is either dropped for garbage collection or explicitly disposed (if `disposeWhenFull` is configured and the type implements `IDisposable`).
 
 *Note: The architecture described above reflects the current implementation. There are currently no speculative future enhancements (hypotheses) planned for the core execution flow.*
