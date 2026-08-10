@@ -1,3 +1,5 @@
-## 2026-06-10 - Architectural Execution Flow Articulation
-**Observation:** The README.md documentation exhibited a deficit regarding the explicit articulation of the underlying multi-tiered allocation strategy (TLS cache, fast slot, shared array, and fallback). It lacked a clear delineation of the internal mechanics and did not explicitly state the absence of planned hypothetical enhancements, leaving room for speculative assumptions. Code examples were also not utilizing contemporary .NET features like target-typed `new()`.
-**Strategic Action:** Synchronized the README.md to explicitly articulate the architectural execution flow, separating implemented capabilities from hypotheses. Updated code examples to leverage modern C# syntax.
+## 2026-08-10 - Architectural Execution Flow & Code Examples
+
+**Observation:** The README.md exhibited documentation drift regarding the Architectural Execution Flow. Specifically, the "Thread-Local Storage (TLS) Cache" and "Rotating Array Slots" tiers of the multi-tiered allocation strategy were missing from the public documentation, requiring developers to speculate on internal mechanics. Additionally, code examples were obsolete, failing to utilize contemporary .NET 9.0/10.0+ target-typed `new()` syntax.
+
+**Strategic Action:** Synchronized the README.md by articulating the precise multi-tiered allocation strategy (TLS Cache -> Fast Slot -> Rotating Array Slots -> Factory Fallback), distinctly separating established framework capabilities from planned future enhancements. Updated all C# code examples to employ target-typed `new()` and structurally validated the examples via compilation prior to submission.
