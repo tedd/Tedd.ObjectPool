@@ -15,3 +15,9 @@
 **Observation:** Tests and benchmarks had compiler warnings for nullability when `Nullable` was set to `enable` in the projects.
 
 **Strategic Action:** Resolved nullability warnings in tests and legacy benchmark code by using explicit nullability (e.g., `DummyObject?[]`) or null-forgiving operators where required to ensure strict clean builds.
+
+## 2026-09-01 - Modernized Test and Benchmark Dependencies and Target Frameworks
+
+**Observation:** The main library targets `.net10.0` but the Test and Benchmark projects only targeted `net8.0` and `net9.0`. Additionally, the test and benchmark projects had outdated dependency versions (`Microsoft.NET.Test.Sdk`, `xunit.runner.visualstudio`, and `Microsoft.Extensions.ObjectPool`).
+
+**Strategic Action:** Added `net10.0` to `TargetFrameworks` for `Tedd.ObjectPool.Tests` and `Tedd.ObjectPool.Benchmarks`. Updated outdated package references to their latest stable compatible versions.
