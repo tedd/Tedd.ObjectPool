@@ -167,10 +167,12 @@ var socketPool = new ObjectPool<System.Net.Sockets.Socket>(
 
 Tedd.ObjectPool utilizes a multi-tiered allocation strategy designed to minimize lock contention and interlocked operations on hot paths:
 
-2. **Fast Slot (`_firstItem`):** If the TLS cache is empty during allocation, the pool attempts an optimistic read and a single CAS operation against a dedicated, highly-contended "fast slot". During deallocation (when TLS is already occupied), the pool publishes to the fast slot using `Volatile.Read`/`Volatile.Write` when it is observed empty.
-4. **Factory Fallback / Overflow:** If the array is exhausted during allocation, a new instance is instantiated via the provided delegate. During deallocation, if the pool is at maximum capacity, the object is either dropped for garbage collection or explicitly disposed (if `disposeWhenFull` is configured and the type implements `IDisposable`).
+1. **Thread-Local Storage (TLS) Cache:** The first tier utilizes a thread-local single-item cache. This avoids all interlocked operations and shared memory contention for common allocate/free scenarios.
+2. **Global Fast Slot:** If the TLS cache is empty during allocation, the pool attempts an optimistic read and a single Compare-And-Swap (CAS) operation against a dedicated, highly-contended "fast slot". During deallocation (when TLS is already occupied), the pool publishes to the fast slot using `Volatile.Read`/`Volatile.Write` when it is observed empty.
+3. **Rotating Array:** The third tier provides additional pooling capacity through an array of slots. Allocation attempts spread contention across these slots using rotating probe indices to minimize CAS collisions and cache-line bouncing.
+4. **Factory Fallback / Overflow:** If the array is exhausted during allocation, a new instance is instantiated via the provided delegate. During deallocation, if the pool is at maximum capacity, the object is either discarded for garbage collection or explicitly disposed (if `disposeWhenFull` is configured and the type implements `IDisposable`).
 
-*Note: The architecture described above reflects the current implementation. There are currently no speculative future enhancements (hypotheses) planned for the core execution flow.*
+*Note: The architecture described above reflects the established framework implementation. There are currently no planned future enhancements (hypotheses) regarding hierarchical data binding or routed event infrastructures in the core execution flow.*
 
 ## Implementation and performance details
 
@@ -180,7 +182,7 @@ Tedd.ObjectPool utilizes a multi-tiered allocation strategy designed to minimize
 - **Correct memory publication**: Uses `Volatile.Read/Write` for unsynchronized accesses and a single CAS (`Interlocked.CompareExchange`) to claim/release.
 - **Contention spreading**: Rotating probe indices on allocate/free reduce CAS collisions and cache-line ping-pong.
 - **Optional prefill**: `Prefill` reduces first-use latency when the factory is expensive.
-- **Overflow policy**: Configurable disposal of `IDisposable` items when the pool is full; default is drop-on-floor to let GC reclaim.
+- **Overflow policy**: Configurable disposal of `IDisposable` items when the pool is full; default is discarded for garbage collection.
 - **DEBUG diagnostics**: Optional leak tracking warns via `Debug.WriteLine` if an allocated item is never returned; `ForgetTrackedObject` lets you intentionally replace an item (e.g., upsizing a buffer) without spurious warnings.
 
 These choices aim to deliver predictable, low-latency operation under contention while keeping the API simple and allocation-free on the hot path.
