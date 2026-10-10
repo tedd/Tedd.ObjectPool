@@ -90,6 +90,7 @@ public class AegisCoverageTests
 
         // 2 objects from manual allocation + 5 from prefill
         Assert.Equal(7, createCount);
+    }
 
     [Fact]
     public void Prefill_WhenSomeArraySlotsOccupied_ShouldSkipOccupiedSlots()

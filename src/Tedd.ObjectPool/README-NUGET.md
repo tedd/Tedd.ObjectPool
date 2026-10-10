@@ -16,7 +16,7 @@ High-performance, thread-safe object pool for reference types in .NET. Optimized
 - **Correct memory publication**: Uses `Volatile.Read/Write` for unsynchronized accesses and a single CAS (`Interlocked.CompareExchange`) to claim/release.
 - **Contention spreading**: Rotating probe indices on allocate/free reduce CAS collisions and cache-line ping-pong.
 - **Optional prefill**: `Prefill` reduces first-use latency when the factory is expensive.
-- **Overflow policy**: Configurable disposal of `IDisposable` items when the pool is full; default is drop-on-floor to let GC reclaim.
+- **Overflow policy**: Configurable disposal of `IDisposable` items when the pool is full; default is discarded for garbage collection.
 - **DEBUG diagnostics**: Optional leak tracking warns via `Debug.WriteLine` if an allocated item is never returned; `ForgetTrackedObject` lets you intentionally replace an item (e.g., upsizing a buffer) without spurious warnings.
 
 ## Usage patterns
@@ -77,7 +77,7 @@ pool.Prefill(count: 32);
 
 ```csharp
 var socketPool = new ObjectPool<System.Net.Sockets.Socket>(
-    factory: () => new System.Net.Sockets.Socket(System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp),
+    factory: () => new(System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp),
     cleanup: s => { /* reset if applicable */ },
     size: 32,
     disposeWhenFull: true // overflowed sockets are disposed instead of dropped
